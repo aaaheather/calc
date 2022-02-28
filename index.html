@@ -1,0 +1,343 @@
+<!--
+Names: Katherine Cook, Jared Gastelum, Carson Dudley, Creed Garner
+Date:
+Description:
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IS Program Calculator</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <style>
+        body
+        {
+        background: #fcf7e2;
+        }
+        
+        .btn-login
+        {
+        font-size: 0.9rem;
+        letter-spacing: 0.05rem;
+        padding: 0.75rem 1rem;
+        }
+
+        .btn-google
+        {
+        color: white !important;
+        background-color: #ea4335;
+        }
+
+        .btn-facebook
+        {
+        color: white !important;
+        background-color: #3b5998;
+        }
+        
+        .info
+        {
+            text-align: center;
+            background: white;
+            padding: 10px;
+        }
+        .dot {
+          height: 15px;
+          width: 15px;
+          background-color: green;
+          border-radius: 50%;
+          display: inline-block;
+        }
+    </style>
+    <script>
+        //clearCircle();
+      // Calculate the weighted GPA that will be used to determine the likelihood of getting into the IS program
+        function calcGPA()
+        {
+            console.log("its going");
+            let fNumIS201;
+            let fNumIS303;
+            let fNumACC;
+            let fOverallGPA;
+            let f30GPA;
+            let fTotalGPA;
+            
+            //user needs to input gpa else tell them too
+            if ((document.getElementById("floatingOverallGPA").value == "") || (document.getElementById("floatingLastCredit").value == "") || (document.getElementById("IS201").value == "") || (document.getElementById("IS303").value == "") || (document.getElementById("ACCOUNTING").value == "") || (document.getElementById("floatingOverallGPA").value > "4") || (document.getElementById("floatingLastCredit").value > "4"))
+                    {
+                    document.getElementById("myCircle").style.display = "none";                                         
+                    document.getElementById("myCircle").style.fill="none";
+                    document.getElementById("message").innerHTML = "";
+                    alert("You must select an item in each drop down and enter a valid value in the GPA text boxes! (0 - 4 GPA)");
+                     
+                    document.getElementById('IS201').focus();
+            
+                    }
+            else
+            {
+                if (document.getElementById("is201retake").checked == true)
+                {
+                    //access the index of grade options
+                    var x = document.getElementById("IS201").selectedIndex;
+                    var y = document.getElementById("IS201").options;
+                    
+                    //assign the lower grade
+                    fNumIS201 = y[x+1].value;
+
+                }
+                else
+                {
+                    //take current grade without retake grade penalty.
+                    fNumIS201 = parseFloat(document.getElementById("IS201").value);
+                }
+                // now for the IS303 or CS142
+                if (document.getElementById("is303retake").checked == true)
+                {
+                    //access the index of grade options
+                    var x = document.getElementById("IS303").selectedIndex;
+                    var y = document.getElementById("IS303").options;
+                    
+                    //assign the lower grade
+                    fNumIS303 = y[x+1].value;
+
+                }
+                else
+                {
+                    //take current grade without retake grade penalty.
+                    fNumIS303 = parseFloat(document.getElementById("IS303").value);
+                }
+                // last for the Accounting 200
+                if (document.getElementById("accountingretake").checked == true)
+                {
+                    //access the index of grade options
+                    var x = document.getElementById("ACCOUNTING").selectedIndex;
+                    var y = document.getElementById("ACCOUNTING").options;
+                    
+                    //assign the lower grade
+                    fNumACC = y[x+1].value;
+
+                }
+                else
+                {
+                    //take current grade without retake grade penalty.
+                    fNumACC = parseFloat(document.getElementById("ACCOUNTING").value);
+                }
+                
+                // Pull GPA values from each letter grade in the input section
+                fOverallGPA = parseFloat(document.getElementById("floatingOverallGPA").value);
+                f30GPA = parseFloat(document.getElementById("floatingLastCredit").value);
+                
+                // This is how much each class grade is waited in the GPA calculator
+                fNumIS201 = fNumIS201 * .30;
+                fNumIS303 = fNumIS303 * .30;
+                fNumACC = fNumACC * .05;
+                fOverallGPA = fOverallGPA * .15;
+                f30GPA = f30GPA * .20;
+
+                fTotalGPA = fNumIS201 + fNumIS303 + fNumACC + fOverallGPA + f30GPA;
+                fTotalGPA = round(fTotalGPA, 2);
+
+                console.log(fTotalGPA);
+
+                document.getElementById("myCircle").style.display = "none";
+
+                document.getElementById("message").innerHTML = ""; 
+                //return fTotalGPA;
+            }
+            console.log(fTotalGPA);
+            if (fTotalGPA >= 3.7 && fTotalGPA <= 4)
+            {
+            
+            document.getElementById("myCircle").style.display = "block";                                           
+            document.getElementById("myCircle").style.fill="green"; 
+            
+
+            document.getElementById("message").innerHTML = "Your IS GPA is " + fTotalGPA + ". <br> You are likely get into the program :)"; 
+            } 
+
+            else if (fTotalGPA >= 3.4)
+            {
+            
+            document.getElementById("myCircle").style.display = "block";                                          
+            document.getElementById("myCircle").style.fill="yellow";
+            
+
+            document.getElementById("message").innerHTML = "Your IS GPA is " + fTotalGPA + ". <br> It is possible to get into the program :|";
+            }
+
+            else if (fTotalGPA >= 0)
+            {
+            
+            document.getElementById("myCircle").style.display = "block";                                         
+            document.getElementById("myCircle").style.fill="red";
+
+            document.getElementById("message").innerHTML = "Your IS GPA is " + fTotalGPA + ". <br> You are unlikely get into the program :(";
+            } 
+        }
+
+        function round(value, decimals) 
+                {
+                return Number(Math.round(value+'e'+decimals)+'e-'+decimals);
+                }//is this rounded to 2 decimal points?
+
+        function clearCircle() 
+          /*When the user clicks on the RESET button you should call a JavaScript function called clearCircle() and clear 
+          the circle (style.display = "none" and style.fill = "none" for the element), clear the output GPA, clear the overall 
+          GPA and the last 30 credits GPA, reset all drop downs to empty and the checkboxes to false, and then set focus to the 
+          IS202 drop down.*/
+        {
+            var checkedInputs = document.querySelectorAll('.check2');
+            for (var i = 0; i < checkedInputs.length; i++) 
+              {
+              checkedInputs[i].checked = false;
+              }
+          
+            document.getElementById('IS201').focus();
+            
+            document.getElementById('floatingOverallGPA').value = '';
+            document.getElementById('floatingLastCredit').value = '';
+            document.getElementById('IS201').value = '';
+            document.getElementById('IS303').value = '';
+            document.getElementById('ACCOUNTING').value = '';
+            
+            document.getElementById("myCircle").style.display = "none";                                         
+            document.getElementById("myCircle").style.fill="none";
+
+            document.getElementById("message").innerHTML = "";
+        }
+
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+          <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
+            <div class="card border-0 shadow rounded-3 my-5">
+              <div class="card-body p-4 p-sm-5">
+                <div class="text-center">
+                    <a href="https://marriott.byu.edu/infosys/" target="_blank">
+                        <img src="https://www.gouconnect.com/hubfs/uConnect_June2020/images/BYU_Marriott-Logo-Cropped.png" alt="Marriott School Logo" style= "border: 1px, gray; padding: 5px;" class="img-thumbnail">
+                    </a>
+                  </div>
+                <br>
+                <form>
+                  <p style="text-align: center;">This program is designed to calulate the likelihood of acceptance into the Marriot School of Business, Information Systems Program.</p>
+               <br>
+                <form>
+                <fieldset style="width:150">
+                <p"><B>IS 201 Grade:</B></p>
+                <select name="IS 201" id="IS201" autofocus>
+                <option value="4">A</option>
+                <option value="3.7">A-</option>
+                <option value="3.4">B+</option>
+                <option value="3">B</option>
+                <option value="2.7">B-</option>
+                <option value="2.4">C+</option>
+                <option value="2">C</option>
+                <option value="1.7">C-</option>
+                <option value="1.4">D+</option>
+                <option value="1">D</option>
+                <option value=".7">D-</option>
+                <option value="0">E</option>
+              </select>
+              <input type="checkbox" id="is201retake" class="check2" name="is201" value="retake">
+              <label for="is201">Retake</label><br>
+              <br>
+              <p><B>IS 303 Grade:</B></p>
+              <select name="IS 303" id="IS303">
+                <option value="4">A</option>
+                <option value="3.7">A-</option>
+                <option value="3.4">B+</option>
+                <option value="3">B</option>
+                <option value="2.7">B-</option>
+                <option value="2.4">C+</option>
+                <option value="2">C</option>
+                <option value="1.7">C-</option>
+                <option value="1.4">D+</option>
+                <option value="1">D</option>
+                <option value=".7">D-</option>
+                <option value="0">E</option>
+              </select>
+              <input type="checkbox" id="is303retake" class="check2" name="is303" value="retake">
+              <label for="is303">Retake</label><br>
+              <br>
+              <p><B>Accounting Grade:</B></p>
+              <select name="Accounting" id="ACCOUNTING">
+                <option value="4">A</option>
+                <option value="3.7">A-</option>
+                <option value="3.4">B+</option>
+                <option value="3">B</option>
+                <option value="2.7">B-</option>
+                <option value="2.4">C+</option>
+                <option value="2">C</option>
+                <option value="1.7">C-</option>
+                <option value="1.4">D+</option>
+                <option value="1">D</option>
+                <option value=".7">D-</option>
+                <option value="0">E</option>
+              </select>
+              <input type="checkbox" id="accountingretake" class="check2" name="accounting" value="retake">
+              <label for="accounting">Retake</label><br>
+            </fieldset>
+          </form>
+            <br>
+            <br>
+
+
+          
+                  <div class="form-floating mb-3">
+                    <input type="number" class="form-control" id="floatingOverallGPA" placeholder="example- 3.14" min="0" max ="4" step=".01">
+                    <label for="floatingOverallGPA">BYU Overall GPA:</label>
+                  </div>
+                  <div class="form-floating mb-3">
+                    <input type="number" class="form-control" id="floatingLastCredit" placeholder="example-4.0" min="0" max="4" step=".01">
+                    <label for="floatingLastCredit">BYU Last 30 Credit GPA:</label>
+                  </div>
+                </form>
+                  <div class="d-grid">
+                    <button class="btn btn-primary btn-login text-uppercase fw-bold" type="button" onclick="calcGPA()">Calculate</button>
+                  </div>
+                  <br>
+                  <div class="d-grid mb-2">
+                    <button class="btn btn-google btn-login text-uppercase fw-bold" type="submit" onclick="clearCircle()">
+                      <i class="fab fa-google me-2"></i> Reset
+                    </button>
+                  </div>
+                  <div class="d-grid">
+                      <br>
+                  </div>
+                  <svg style="align-content: center;" height="25" width="25">
+                      <circle id="myCircle" cx="12.5" cy="12.5" r="10" 
+                      stroke="black" stroke-width="3" fill="green" 
+                      display = "none" />
+                    </svg>
+                 <p id="message" style="text-align: center;"></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    
+    <!--Program explanation and Information-->
+    <div class="container info shadow rounded-3">
+        <b><p style="font-size: 25px;">Program Overview</p></b>
+        <hr style="width:50%; margin-left:25%; margin-right:25%;"> 
+        <p>The BS Information Systems program is available as a four-year traditional degree or as a five-year integrated option where students earn both the BS IS and MISM degrees. The BS IS program is a 64-credit degree including pre-management, junior core, management core, and a capstone.</p>
+        <b><p style="font-size: 25px;">Curriculum</p></b>
+        <hr style="width:50%; margin-left:25%; margin-right:25%;"> 
+        <p>
+            Information systems students learn to define, develop, and maintain the information system infrastructure that supports the operations of all businesses, governments, and other institutions. The BS Information Systems degree develops the ability to function effectively as a professional, applying state-of-the-art technology in solving business problems. Students are trained in business and information systems and taught to understand complex business environments.
+        </p>
+        <p>
+            Built on a solid foundation of business courses, the curriculum advances students’ understanding of technologies in the design and development of information systems. They gain technical expertise in systems analysis; systems design and implementation; database development and management; programming; telecommunications networking; 2-tier, 3-tier, and n-tier application development; and web application development.
+        </p>
+        
+    </div>
+    
+    <br><br>
+    
+
+
+</body>
+</html>
